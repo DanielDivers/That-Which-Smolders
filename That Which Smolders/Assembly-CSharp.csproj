@@ -103,8 +103,13 @@
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Utils\MaterialFactory.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Utils\RenderTextureFactory.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Utilities\CustomMotionTexture\ExampleWheelController.cs" />
-    <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
-    <Compile Include="Assets\Scripts\Player\PlayerMotor.cs" />
+    <Compile Include="Assets\Scripts\Interactables\Interactable.cs" />
+    <Compile Include="Assets\Scripts\Interactables\Player\CameraController.cs" />
+    <Compile Include="Assets\Scripts\Interactables\Player\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\Interactables\Player\PlayerControlScheme.cs" />
+    <Compile Include="Assets\Scripts\Interactables\Player\PlayerMotor.cs" />
+    <Compile Include="Assets\Scripts\Interactables\Player\PlayerPointClickControlScheme.cs" />
+    <Compile Include="Assets\Scripts\Interactables\Player\PlayerWASDControlScheme.cs" />
     <None Include="Assets\Environment\PostProcessing\Resources\Shaders\DepthOfField.shader" />
     <None Include="Assets\Environment\PostProcessing\Resources\Shaders\MotionBlur.cginc" />
     <None Include="Assets\Environment\PostProcessing\Resources\Shaders\Fog.shader" />
