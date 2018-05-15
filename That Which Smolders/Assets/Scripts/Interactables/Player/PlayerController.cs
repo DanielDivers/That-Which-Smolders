@@ -9,31 +9,34 @@ public class PlayerController : MonoBehaviour {
     public LayerMask movementMask;
     public Interactable currentFocus;
 
-    PlayerPointClickControlScheme PointClickControl = new PlayerPointClickControlScheme();
-    PlayerWASDControlScheme WASDControl = new PlayerWASDControlScheme();
+    PlayerControlScheme PlayerControl = new PlayerControlScheme();
 
-    private void Start()
+    void Start()
     {
-        PointClickControl.cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>() as Camera;
-        PointClickControl.movementMask = movementMask;
-        PointClickControl.motor = GetComponent<PlayerMotor>();
-
-        WASDControl.cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>() as Camera;
-        WASDControl.movementMask = movementMask;
+        PlayerControl.cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>() as Camera;
+        PlayerControl.movementMask = movementMask;
+        PlayerControl.motor = GetComponent<PlayerMotor>();
     }
 
     void LateUpdate()
     {
         if (currentControlStyle == ControlStyle.PointClick)
         {
-            PointClickControl.update();
+            PlayerControl.updatePC();
 
-            currentFocus = PointClickControl.currentFocus;
+            currentFocus = PlayerControl.currentFocus;
         }
         else if (currentControlStyle == ControlStyle.WASD)
         {
-            WASDControl.update();
-            currentFocus = WASDControl.currentFocus;
+            PlayerControl.motor.Stop();
+            PlayerControl.updateWASD();
+            var x = Input.GetAxis("Horizontal") * Time.deltaTime * 150.0f;
+            var z = Input.GetAxis("Vertical") * Time.deltaTime * 3.0f;
+
+            transform.Rotate(0, x, 0);
+            transform.Translate(0, 0, z);
+
+            currentFocus = PlayerControl.currentFocus;
         }
     }
 }

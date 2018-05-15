@@ -24,7 +24,13 @@ public class PlayerMotor : MonoBehaviour {
 	
 	public void MoveToPoint(Vector3 point)
     {
+        agent.isStopped = false;
         agent.SetDestination(point);
+    }
+
+    public void Stop()
+    {
+        agent.isStopped = true;
     }
 
     public void FocusTarget(Interactable newTarget)

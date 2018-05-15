@@ -962,7 +962,7 @@ GameObject:
   - component: {fileID: 415619954}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -993,6 +993,7 @@ MonoBehaviour:
   movementMask:
     serializedVersion: 2
     m_Bits: 256
+  currentFocus: {fileID: 0}
 --- !u!54 &415619956
 Rigidbody:
   m_ObjectHideFlags: 0
