@@ -35,7 +35,7 @@ public class PlayerMotor : MonoBehaviour {
 
     public void FocusTarget(Interactable newTarget)
     {
-        target = newTarget.transform;
+        target = newTarget.interactionTranform;
     }
     public void RemoveTarget()
     {

@@ -6,37 +6,138 @@ public class PlayerController : MonoBehaviour {
 
     public enum ControlStyle { PointClick, WASD};
     public ControlStyle currentControlStyle;
-    public LayerMask movementMask;
-    public Interactable currentFocus;
 
-    PlayerControlScheme PlayerControl = new PlayerControlScheme();
+    public Interactable currentFocus;
+    public LayerMask movementMask;
+    Camera cam;
+    PlayerMotor motor;
 
     void Start()
     {
-        PlayerControl.cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>() as Camera;
-        PlayerControl.movementMask = movementMask;
-        PlayerControl.motor = GetComponent<PlayerMotor>();
+        cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>() as Camera;
+        motor = GetComponent<PlayerMotor>();
     }
 
     void LateUpdate()
     {
         if (currentControlStyle == ControlStyle.PointClick)
         {
-            PlayerControl.updatePC();
-
-            currentFocus = PlayerControl.currentFocus;
+            updatePC();
         }
+
         else if (currentControlStyle == ControlStyle.WASD)
         {
-            PlayerControl.motor.Stop();
-            PlayerControl.updateWASD();
-            var x = Input.GetAxis("Horizontal") * Time.deltaTime * 150.0f;
-            var z = Input.GetAxis("Vertical") * Time.deltaTime * 3.0f;
+            motor.Stop();
+            updateWASD();
 
-            transform.Rotate(0, x, 0);
-            transform.Translate(0, 0, z);
+            if (Input.GetKey(KeyCode.W))
+            {
+                transform.Translate(0, 0, 0.1f);
+            }
+            if (Input.GetKey(KeyCode.S))
+            {
+                transform.Translate(0, 0, -0.1f);
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+                transform.Translate(-0.1f, 0, 0);
+            }
+            if (Input.GetKey(KeyCode.D))
+            {
+                transform.Translate(0.1f, 0, 0);
+            }
+        }
+    }
 
-            currentFocus = PlayerControl.currentFocus;
+    public void SetFocus(Interactable newFocus)
+    {
+        if (newFocus != currentFocus)
+        {
+            if (currentFocus != null)
+            {
+                currentFocus.OnDeFocused();
+            }
+
+            currentFocus = newFocus;
+            //motor.FollowTarget(newFocus);
+        }
+
+        newFocus.OnFocused(transform);
+    }
+
+    void RemoveFocus()
+    {
+        if (currentFocus != null)
+        {
+            currentFocus.OnDeFocused();
+        }
+
+        currentFocus = null;
+        //motor.StopFollowingTarget();
+    }
+
+    //POINT CLICK CONTROL UPDATE
+    void updatePC()
+    {
+        if (currentFocus != null)
+        {
+            motor.FocusTarget(currentFocus);
+        }
+        else motor.RemoveTarget();
+
+        //left click
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, 100, movementMask))
+            {
+                //Move player to location
+
+                motor.MoveToPoint(hit.point);
+                RemoveFocus();
+            }
+        }
+
+        //right click
+        if (Input.GetMouseButtonDown(1))
+        {
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, 100))
+            {
+                Interactable interactable = hit.collider.GetComponent<Interactable>();
+
+                if (interactable != null)
+                {
+                    SetFocus(interactable);
+                }
+                //else SetFocus(null);
+            }
+        }
+    }
+
+    //WASD CONTROL UPDATE
+    void updateWASD()
+    {
+        //left click
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, 100))
+            {
+                Interactable interactable = hit.collider.GetComponent<Interactable>();
+
+                if (interactable != null)
+                {
+                    SetFocus(interactable);
+                }
+                //else SetFocus(null);
+            }
         }
     }
 }
